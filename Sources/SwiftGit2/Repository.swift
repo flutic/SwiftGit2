@@ -386,13 +386,11 @@ public final class Repository {
 		return remoteLookup(named: name) { $0.map(Remote.init) }
 	}
 
-	/// Download new data and update tips
-	public func fetch(_ remote: Remote) -> Result<(), NSError> {
+	/// Download new data and update tips. Pass credentials for private remotes.
+	public func fetch(_ remote: Remote, credentials: Credentials = .default) -> Result<(), NSError> {
 		return remoteLookup(named: remote.name) { remote in
 			remote.flatMap { pointer in
-				var opts = git_fetch_options()
-				let resultInit = git_fetch_init_options(&opts, UInt32(GIT_FETCH_OPTIONS_VERSION))
-				assert(resultInit == GIT_OK.rawValue)
+				var opts = fetchOptions(credentials: credentials)
 
 				let result = git_remote_fetch(pointer, nil, &opts, nil)
 				guard result == GIT_OK.rawValue else {
