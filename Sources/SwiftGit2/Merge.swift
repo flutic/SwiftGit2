@@ -160,8 +160,9 @@ extension Repository {
         return .success(())
     }
 
-    /// Read the raw bytes of a blob by OID.
-    public func blob(_ oid: OID) -> Result<Data, NSError> {
+    /// Read the raw bytes of a blob by OID. Distinct from `blob(_ oid:)` which
+    /// returns a `Blob` value type — this returns the unwrapped content bytes.
+    public func blobBytes(_ oid: OID) -> Result<Data, NSError> {
         var blob: OpaquePointer? = nil
         var oidCopy = oid.oid
         let result = git_blob_lookup(&blob, self.pointer, &oidCopy)
