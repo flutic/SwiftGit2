@@ -108,6 +108,12 @@ let package = Package(
                 .define("MAX_NAME_SIZE", to: "32"),
                 .define("MAX_NAME_COUNT", to: "10000"),
 
+                // Thread safety — required when libgit2 is invoked from
+                // multiple Swift async tasks / dispatch queues. Without this
+                // libgit2's mwindow/odb hashmaps NULL-deref when accessed
+                // concurrently.
+                .define("GIT_THREADS", to: "1"),
+
                 // Git SSH transport configuration
                 .define("GIT_SSH", to: "1"),
                 .define("GIT_SSH_EXEC", to: "1"),
