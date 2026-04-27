@@ -48,7 +48,7 @@ private func pushOptions(payload: PushCallbackPayload) -> git_push_options {
 private let pushCredentialsShim: git_credential_acquire_cb = { cred, url, username, allowed, payload in
     guard let payload = payload else { return -1 }
     let box = Unmanaged<PushCallbackPayload>.fromOpaque(payload).takeUnretainedValue()
-    return credentialsCallback(cred, url, username, allowed, box.credentialsPointer)
+    return credentialsCallback(cred: cred, url: url, username: username, allowed, payload: box.credentialsPointer)
 }
 
 extension Repository {
